@@ -32,7 +32,7 @@ def run_output(*args, **kwargs):
 
     try:
         output = subprocess.check_output(args,
-                                         stderr=sys.stderr,
+                                         stderr = kwargs.get('stderr', sys.stderr),
                                          env = env)
     except subprocess.CalledProcessError as e:
         print(e.output.decode('utf-8'))
@@ -199,7 +199,7 @@ def raw_coverage(use_sudo, verify, link_dead_code, test_args,
     else:
         env = {}
 
-    output = run_output('cargo', 'test', *test_args, env = env)
+    output = run_output('cargo', 'test', *test_args, stderr = subprocess.STDOUT, env = env)
     print(output)
     running = re.compile('^     Running target/debug/(.*)$', re.M)
     for line in running.finditer(output):
